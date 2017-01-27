@@ -35,9 +35,9 @@ def main(argv=sys.argv):
     print("Downloading systems.csv from EDDB.io...")
     r = requests.get("https://eddb.io/archive/v5/systems.csv",stream=True)
     with open('systems.csv', 'wb') as f:
-       for chunk in r.iter_content(chunk_size=4096):
-       if chunk:
-       f.write(chunk)
+        for chunk in r.iter_content(chunk_size=4096):
+            if chunk:
+                f.write(chunk)
     print("Saved systems.csv. Converting CSV to SQL.")
     ds = dshape("var *{  id: ?int64,  edsm_id: ?int64,  name: ?string,  x: ?float64,  y: ?float64,  "
                 "z: ?float64,  population: ?int64,  is_populated: ?int64,  government_id: ?int64,  "
