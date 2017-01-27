@@ -26,6 +26,7 @@ def rats_view(request):
     response = requests.get("https://api.fuelrats.com/rats?limit=2000", verify=False)
     tempjson = response.json()
     rats = []
+    log.debug("Got rats:"+str(tempjson))
     for CMDRName in tempjson['data']:
         rats.append(CMDRName['CMDRname'])
     return {'project': 'galmap2',
