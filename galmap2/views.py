@@ -24,6 +24,7 @@ def galmap_view(request):
 @view_config(route_name='rats', renderer='templates/rats.pt')
 def rats_view(request):
     response = requests.get("https://api.fuelrats.com/rats?limit=2000", verify=False)
+    response.content.decode('utf-8')
     tempjson = response.json()
     rats = []
     #log.debug("Got rats:"+str(tempjson))
