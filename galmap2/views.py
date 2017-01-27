@@ -23,7 +23,7 @@ def galmap_view(request):
 
 @view_config(route_name='rats', renderer='templates/rats.pt')
 def rats_view(request):
-    response = requests.get("https://api.fuelrats.com/rats?limit=2000")
+    response = requests.get("https://api.fuelrats.com/rats?limit=2000", verify=False)
     tempjson = response.json()
     rats = []
     for CMDRName in tempjson['data']:
@@ -37,7 +37,7 @@ def view_today(request):
     today = datetime.now() - timedelta(days=1)
     url = "https://api.fuelrats.com/rescues?createdAtAfter=" + str(today)
     log.debug("Hitting URL: " + url)
-    response = requests.get(url)
+    response = requests.get(url, verify=False)
     tempjson = response.json()
     systems = []
     for rescue in tempjson['data']:
@@ -71,13 +71,13 @@ def view_rat_view(request):
     rat = request.params['rat']
     #rat = "e8fc095a-4561-4237-a890-83b859e85156"
     url = "https://api.fuelrats.com/rats?CMDRname=" + rat
-    response = requests.get(url)
+    response = requests.get(url, verify=False)
     tempjson = response.json()
     log.debug("Got rat response: " + str(tempjson)+" type "+ str(type(tempjson)))
     ratid = tempjson['data'][0]['id']
     log.debug("RatID:"+ratid)
     url = "https://api.fuelrats.com/rescues?limit=500&firstLimpet=" + str(ratid)
-    rescueres = requests.get(url)
+    rescueres = requests.get(url, verify=False)
     log.debug("Text version:" + rescueres.text)
     rescuejson = rescueres.json()
     log.debug("Fetched rescues: " + str(rescuejson))
