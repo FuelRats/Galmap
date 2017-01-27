@@ -30,8 +30,9 @@ def rats_view(request):
     #log.debug("Got rats:"+str(tempjson))
     for CMDRName in tempjson['data']:
         rats.append(CMDRName['CMDRname'])
+    jrats=json.dumps(rats)
     return {'project': 'galmap2',
-            'rats': rats}
+            'rats': jrats}
 
 
 @view_config(route_name='view_today', renderer='templates/galmap.pt')
