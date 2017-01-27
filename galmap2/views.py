@@ -24,12 +24,12 @@ def galmap_view(request):
 @view_config(route_name='rats', renderer='templates/rats.pt')
 def rats_view(request):
     response = requests.get("https://api.fuelrats.com/rats?limit=2000", verify=False)
-    response.content.decode('utf-8')
+    response.encoding = 'utf-8'
     tempjson = response.json()
     rats = []
     #log.debug("Got rats:"+str(tempjson))
     for CMDRName in tempjson['data']:
-        rats.append(str(CMDRName['CMDRname']))
+        rats.append(CMDRName['CMDRname'])
     return {'project': 'galmap2',
             'rats': rats}
 
