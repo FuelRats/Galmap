@@ -28,7 +28,7 @@ def rats_view(request):
     rats = []
     #log.debug("Got rats:"+str(tempjson))
     for CMDRName in tempjson['data']:
-        rats.append(CMDRName['CMDRname'])
+        rats.append(str(CMDRName['CMDRname']))
     return {'project': 'galmap2',
             'rats': rats}
 
@@ -61,13 +61,13 @@ def view_today(request):
 #@view_config(route_name='view_rat', renderer='templates/galmap.pt')
 @view_config(request_method='POST', route_name='view_rat', renderer='templates/galmap.pt')
 def view_rat_view(request):
-    #fields = {}
-    #if not request.params:
-    #    fields = {"error", "No parameters provided."}
-    #    return fields
-    #if 'rat' not in request.params:
-    #    fields = {"error", "No rat provided."}
-    #    return fields
+    fields = {}
+    if not request.params:
+        fields = {"error", "No parameters provided."}
+        return fields
+    if 'rat' not in request.params:
+        fields = {"error", "No rat provided."}
+        return fields
     log.debug("Params: "+str(request.params))
     rat = request.params['rat']
     #rat = "e8fc095a-4561-4237-a890-83b859e85156"
