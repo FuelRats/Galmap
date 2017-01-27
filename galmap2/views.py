@@ -1,16 +1,15 @@
 import json
 import logging
-from urllib.request import urlopen
-import urllib.parse
 import requests
 from datetime import date, datetime, timedelta
-import os
-import sqlalchemy
+import colander, deform.widget
+
 from pyramid.view import view_config
 from .models import DBSession, System
 
-log = logging.getLogger(__name__)
 
+
+log = logging.getLogger(__name__)
 
 @view_config(route_name='home', renderer='templates/mytemplate.pt')
 def home_view(request):
@@ -24,8 +23,8 @@ def galmap_view(request):
 
 @view_config(route_name='rats', renderer='templates/rats.pt')
 def rats_view(request):
-    response = urlopen("https://api.fuelrats.com/rats?limit=2000")
-    tempjson = json.loads(response.read())
+    response = requests.get("https://api.fuelrats.com/rats?limit=2000")
+    tempjson = response.json()
     rats = []
     for CMDRName in tempjson['data']:
         rats.append(CMDRName['CMDRname'])
@@ -43,36 +42,41 @@ def view_today(request):
     systems = []
     for rescue in tempjson['data']:
         log.debug("Fetching system " + rescue['system'])
-        sysreq = requests.get("https://www.edsm.net/api-v1/system?systemName=" +
-                              rescue['system'] + "&coords=1")
-        log.debug("Got sysdata: " + sysreq.text)
-        sysjson = sysreq.json()
-        if not sysjson:
-            log.debug("Null sysjson...")
-            continue
-        if sysjson['coords'] is not 'null':
-            syscoords = sysjson['coords']
-            systems.append({"name": rescue['system'],
-                            "coords": syscoords
-                            })
+        sysupper = rescue['system'].upper()
+        sysreq = DBSession.query(System).filter(System.name.like(sysupper)).limit(10).first()
+        if not sysreq:
+            continue;
+        log.debug("Query return: " + sysreq.name)
+        coords = {"x": sysreq.x, "y": sysreq.y, "z": sysreq.z}
+        syscoords = coords
+        systems.append({"name": rescue['system'],
+                        "coords": syscoords
+                        })
     return {'project': 'galmap2',
             'title': 'Rescues for ' + str(today),
             'json': json.dumps(systems)}
 
 
-@view_config(route_name='view_rat', renderer='templates/galmap.pt')
-# @view_config(request_method='POST', route_name='view_rat', renderer='templates/galmap.pt')
+#@view_config(route_name='view_rat', renderer='templates/galmap.pt')
+@view_config(request_method='POST', route_name='view_rat', renderer='templates/galmap.pt')
 def view_rat_view(request):
-    # rat = request.params['rat']
-    rat = "e8fc095a-4561-4237-a890-83b859e85156"
-    url = "https://api.fuelrats.com/rats?id=" + rat
+    #fields = {}
+    #if not request.params:
+    #    fields = {"error", "No parameters provided."}
+    #    return fields
+    #if 'rat' not in request.params:
+    #    fields = {"error", "No rat provided."}
+    #    return fields
+    log.debug("Params: "+str(request.params))
+    rat = request.params['rat']
+    #rat = "e8fc095a-4561-4237-a890-83b859e85156"
+    url = "https://api.fuelrats.com/rats?CMDRname=" + rat
     response = requests.get(url)
     tempjson = response.json()
-    log.debug("Got rat response: " + str(tempjson))
-    # temp2 = tempjson['data']
-    # ratid = temp2[0]['id']
-    url = "https://api.fuelrats.com/rescues?firstLimpet=" + rat
-    # url = "https://api.fuelrats.com/rescues?firstLimpet=9a61520b-b069-4ece-8274-1230ce43f776"
+    log.debug("Got rat response: " + str(tempjson)+" type "+ str(type(tempjson)))
+    ratid = tempjson['data'][0]['id']
+    log.debug("RatID:"+ratid)
+    url = "https://api.fuelrats.com/rescues?limit=500&firstLimpet=" + str(ratid)
     rescueres = requests.get(url)
     log.debug("Text version:" + rescueres.text)
     rescuejson = rescueres.json()
@@ -93,7 +97,7 @@ def view_rat_view(request):
                         })
     rescues.append({"systems": systems})
     return {'project': 'galmap2',
-            'title': 'Rescues for Absolver',
+            'title': 'Rescues for '+rat,
             'json': json.dumps(systems)}
 
 @view_config(route_name='view_api', renderer='json')

@@ -22,7 +22,7 @@
     var availableTags = ${rats};
 
 
-    $( "#tags" ).autocomplete({
+    $( "#rat" ).autocomplete({
       source: availableTags
     });
   } );
@@ -45,8 +45,11 @@
               <p class="lead">Welcome to <span class="font-normal">${project}</span>, an&nbsp;application generated&nbsp;by<br>the <span class="font-normal">Pyramid Web Framework 1.7.3</span>.</p>
                 <p>Enter rat to display rescues for below.</p>
                 <div class="ui-widget">
-                    <label for="tags">CMDR name: </label>
-                    <input id="tags">
+                    <form action="/view_rat" method="POST">
+                    <label for="rat">CMDR name: </label>
+                    <input type="text" name="rat" id="rat">
+                    <input type="submit" name="submit" value="Submit">
+                    </form>
                 </div>
             </div>
           </div>

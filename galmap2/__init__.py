@@ -16,6 +16,7 @@ def main(global_config, **settings):
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view(name='textures', path='static/ED3D-Galaxy-Map/textures')
     config.add_static_view(name='data', path='static/ED3D-Galaxy-Map/data')
+    config.add_static_view('deform_static', 'deform:static/')
     config.add_route('home', '/')
     config.add_route('galmap', '/galmap')
     config.add_route('rats', '/rats')

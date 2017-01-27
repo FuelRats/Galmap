@@ -11,8 +11,10 @@ from sqlalchemy import engine_from_config
 
 from galmap2.models import (
     DBSession,
+    System,
     Base,
 )
+
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
@@ -33,7 +35,7 @@ def main(argv=sys.argv):
     # Add all the systems!
 
     print("Downloading systems.csv from EDDB.io...")
-    r = requests.get("https://eddb.io/archive/v5/systems.csv",stream=True)
+    r = requests.get("https://eddb.io/archive/v5/systems.csv", stream=True)
     with open('systems.csv', 'wb') as f:
         for chunk in r.iter_content(chunk_size=4096):
             if chunk:
@@ -47,11 +49,13 @@ def main(argv=sys.argv):
                 "power_state: ?string,  power_state_id: ?string,  needs_permit: ?int64,  "
                 "updated_at: ?int64,  simbad_ref: ?string,  controlling_minor_faction_id: ?string,  "
                 "controlling_minor_faction: ?string,  reserve_type_id: ?float64,  reserve_type: ?string  }")
-    url=engine.url
+    url = str(engine.url) + "::" + System.__tablename__
     t = odo('systems.csv', url, dshape=ds)
     print("Uppercasing system names...")
     DBSession.execute("UPDATE systems set name = UPPER(name)")
     print("Creating indexes...")
     DBSession.execute("CREATE INDEX systems_idx on systems(name)")
     print("Done!")
+
+
 main()

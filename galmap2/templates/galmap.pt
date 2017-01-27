@@ -89,8 +89,8 @@
     </div>
 
 -->
-<h2>${title}</h2>
-    <div id="edmap">Mapshouldbehere</div>
+<center><font color="white"><h2>${title}</h2></font></center>
+    <div id="edmap"></div>
 
 
   <!-- jQuery -->
@@ -99,7 +99,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r75/three.min.js"></script>
 
   <!-- JSon inside a container -->
-  <div id="json_data">
+  <div id="json_data" style="display: none;">
       ${json}
   </div>
 
