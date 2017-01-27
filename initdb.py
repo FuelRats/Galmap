@@ -47,7 +47,7 @@ def main(argv=sys.argv):
                 "power_state: ?string,  power_state_id: ?string,  needs_permit: ?int64,  "
                 "updated_at: ?int64,  simbad_ref: ?string,  controlling_minor_faction_id: ?string,  "
                 "controlling_minor_faction: ?string,  reserve_type_id: ?float64,  reserve_type: ?string  }")
-    t = odo('systems.csv', 'sqlite:///galmap2.sqlite::systems', dshape=ds)
+    t = odo('systems.csv', engine.url, dshape=ds)
     print("Uppercasing system names...")
     DBSession.execute("UPDATE systems set name = UPPER(name)")
     print("Creating indexes...")
