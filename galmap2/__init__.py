@@ -1,4 +1,6 @@
 from pyramid.config import Configurator
+from pyramid.request import Request
+from pyramid.request import Response
 
 from sqlalchemy import engine_from_config
 from .models import DBSession, Base

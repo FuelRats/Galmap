@@ -53,7 +53,11 @@ def view_today(request):
         coords = {"x": sysreq.x, "y": sysreq.y, "z": sysreq.z}
         syscoords = coords
         systems.append({"name": rescue['system'],
-                        "coords": syscoords
+                        "coords": syscoords,
+                        "infos":"<h2><center>Rescue data:</center></h2><br>"+
+                        "<b>Date</b>: "+rescue['createdAt']+"<br><b>Platform: </b>"+
+                        rescue['platform']+"<br><b>Epic:</b> "+str(rescue['epic'])+
+                        "<br><b>Code Red:</b> "+str(rescue['codeRed'])
                         })
     return {'project': 'galmap2',
             'title': 'Rescues for ' + str(today),
@@ -96,12 +100,24 @@ def view_rat_view(request):
         coords = {"x": sysreq.x, "y": sysreq.y, "z": sysreq.z}
         syscoords = coords
         systems.append({"name": rescue['system'],
-                        "coords": syscoords
+                        "coords": syscoords,
+                        "infos":"<h2><center>Rescue data:</center></h2><br>"+
+                        "<b>Date</b>: "+rescue['createdAt']+"<br><b>Platform: </b>"+
+                        rescue['platform']+"<br><b>Epic:</b> "+str(rescue['epic'])+
+                        "<br><b>Code Red:</b> "+str(rescue['codeRed'])
                         })
     rescues.append({"systems": systems})
     return {'project': 'galmap2',
             'title': 'Rescues for '+rat,
             'json': json.dumps(systems)}
+@view_config(route_name='view_api', request_method='OPTIONS')
+def view_api(request):
+    request.response.headerlist.extend(
+        (
+            ('Access-Control-Allow-Origin', '*'),
+            ('Content-Type', 'application/json')
+        ))
+    return request
 
 @view_config(route_name='view_api', renderer='json')
 def view_api(request):
