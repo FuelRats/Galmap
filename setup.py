@@ -14,7 +14,8 @@ requires = [
     'pyramid_debugtoolbar',
     'waitress',
     'sqlalchemy',
-    'zope.sqlalchemy', 'requests', 'odo', 'colander', 'deform', 'wsgicors'
+    'zope.sqlalchemy', 'requests', 'odo', 'colander', 'deform', 'wsgicors', 'pyramid_jsonapi',
+    'psycopg2'
     ]
 
 tests_require = [

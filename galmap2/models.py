@@ -4,15 +4,18 @@ from sqlalchemy import (
     Column,
     Integer,
     Text,
-    Float
-    )
+    Float,
+    Boolean,
+    JSON,
+    ForeignKey)
 
 from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
-    )
+    relationship
+)
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
@@ -20,6 +23,62 @@ DBSession = scoped_session(
     sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
+
+class Body(Base):
+    __tablename__ = 'bodies'
+    id = Column(Integer, primary_key=True)
+    created_at = Column(Integer)
+    updated_at = Column(Integer)
+    name = Column(Text)
+    system_id = Column(Integer)
+    group_id = Column(Integer)
+    group_name = Column(Text)
+    type_id = Column(Integer)
+    type_name = Column(Text)
+    distance_to_arrival = Column(Integer)
+    full_spectral_class = Column(Text)
+    spectral_class = Column(Text)
+    spectral_sub_class = Column(Text)
+    luminosity_class = Column(Text)
+    luminosity_sub_class = Column(Text)
+    surface_temperature = Column(Integer)
+    is_main_star = Column(Boolean)
+    age = Column(Integer)
+    solar_masses = Column(Float)
+    solar_radius = Column(Float)
+    catalogue_gliese_id = Column(Integer)
+    catalogue_hipp_id = Column(Integer)
+    catalogue_hd_id = Column(Integer)
+    volcanism_type_id = Column(Integer)
+    volcanism_type_name = Column(Text)
+    atmosphere_type_id = Column(Integer)
+    atmosphere_type_name = Column(Text)
+    terraforming_state_id = Column(Integer)
+    terraforming_state_name = Column(Text)
+    earth_masses = Column(Float)
+    radius = Column(Integer)
+    gravity = Column(Float)
+    surface_pressure = Column(Integer)
+    orbital_period = Column(Float)
+    semi_major_axis = Column(Float)
+    orbital_eccentricity = Column(Float)
+    orbital_inclination = Column(Float)
+    arg_of_periapsis = Column(Float)
+    rotational_period = Column(Float)
+    is_rotational_period_tidally_locked = Column(Boolean)
+    axis_tilt = Column(Float)
+    eg_id = Column(Integer)
+    belt_moon_masses = Column(Float)
+    ring_type_id = Column(Integer)
+    ring_type_name = Column(Text)
+    ring_mass = Column(Integer)
+    ring_inner_radius = Column(Float)
+    ring_outer_radius = Column(Float)
+    rings = Column(JSON)
+    atmosphere_composition = Column(JSON)
+    solid_composition = Column(JSON)
+    materials = Column(JSON)
+    is_landable = Column(Integer)
 
 class System(Base):
     __tablename__ = 'systems'
@@ -51,7 +110,6 @@ class System(Base):
     controlling_minor_faction = Column(Text)
     reserve_type_id = Column(Integer)
     reserve_type = Column(Text)
-
 
 class Root(object):
     __acl__ = [(Allow, Everyone, 'view'),
