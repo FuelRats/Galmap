@@ -105,7 +105,7 @@ class System(Base):
     power_state_id = Column(Integer)
     needs_permit = Column(Integer)
     updated_at = Column(Integer)
-    simbad_ref = Column(Integer)
+    simbad_ref = Column(Text)
     controlling_minor_faction_id = Column(Integer)
     controlling_minor_faction = Column(Text)
     reserve_type_id = Column(Integer)
