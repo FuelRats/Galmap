@@ -16,7 +16,6 @@ from galmap2.models import (
     Base,
 )
 
-
 def usage(argv):
     cmd = os.path.basename(argv[0])
     print('usage: %s <config_uri>\n'
@@ -32,6 +31,7 @@ def main(argv=sys.argv):
     settings = get_appsettings(config_uri)
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
+    Base.drop(engine, checkfirst=True)
     Base.metadata.create_all(engine)
     # Add all the systems!
 
