@@ -62,13 +62,13 @@ def main(argv=sys.argv):
     #print("Creating indexes...")
     #DBSession.execute("CREATE INDEX systems_idx on systems(name)")
     #print("Done!")
-    if os.path.isfile('bodies.jsonl'):
-        if datetime.fromtimestamp(os.path.getmtime('bodies.jsonl')) >  datetime.today()-timedelta(days=7):
-            print("Using cached bodies.jsonl")
+    if os.path.isfile('bodies.json'):
+        if datetime.fromtimestamp(os.path.getmtime('bodies.json')) >  datetime.today()-timedelta(days=7):
+            print("Using cached bodies.json")
     else:
         print("Downloading bodies.jsonl from EDDB.io...")
         r = requests.get("https://eddb.io/archive/v5/bodies.jsonl", stream=True)
-        with open('bodies.jsonl', 'wb') as f:
+        with open('bodies.json', 'wb') as f:
             for chunk in r.iter_content(chunk_size=4096):
                 if chunk:
                     f.write(chunk)
@@ -91,7 +91,7 @@ def main(argv=sys.argv):
                 "rings: ?json, atmosphere_composition: ?json, solid_composition: ?json, "
                 "materials: ?json, is_landable: ?int64}")
     url = str(engine.url) + "::" + Body.__tablename__
-    t = odo('bodies.jsonl', url, dshape=ds)
+    t = odo('jsonlines://bodies.json', url, dshape=ds)
     print("Creating indexes...")
     DBSession.execute("CREATE INDEX bodies_idx on bodies(name)")
     print("Done!")
