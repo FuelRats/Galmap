@@ -31,7 +31,7 @@ class Body(Base):
     created_at = Column(BigInteger)
     updated_at = Column(BigInteger)
     name = Column(Text)
-    system_id = Column(Integer)
+    system_id = Column(BigInteger)
     group_id = Column(Integer)
     group_name = Column(Text)
     type_id = Column(Integer)
