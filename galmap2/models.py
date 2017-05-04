@@ -80,7 +80,7 @@ class Body(Base):
     solid_composition = Column(JSON)        # I AM NOT
     materials = Column(JSON)                # DEALING WITH YOU
     is_landable = Column(BigInteger)
-    a = relationship('System', foregin_keys=[id], primaryjoin='System.id == Body.system_id')
+    a = relationship('System', foreign_keys=[id], primaryjoin='System.id == Body.system_id')
 
 class System(Base):
     __tablename__ = 'systems'
