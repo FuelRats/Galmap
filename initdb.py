@@ -35,7 +35,7 @@ def main(argv=sys.argv):
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     # Add all the systems!
-    if os.path.getmtime('systems.csv') > time.time()-(24*3600):
+    if os.path.getmtime('systems.csv') > time()-(24*3600):
         print("Using cached systems.csv")
     else:
         print("Downloading systems.csv from EDDB.io...")
@@ -61,7 +61,7 @@ def main(argv=sys.argv):
     print("Creating indexes...")
     DBSession.execute("CREATE INDEX systems_idx on systems(name)")
     print("Done!")
-    if os.path.getmtime('bodies.jsonl') > time.time() - (24 * 3600):
+    if os.path.getmtime('bodies.jsonl') > time() - (24 * 3600):
         print("Using cached bodies.jsonl")
     else:
         print("Downloading bodies.jsonl from EDDB.io...")
