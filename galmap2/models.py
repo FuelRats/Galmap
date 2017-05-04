@@ -31,7 +31,7 @@ class Body(Base):
     created_at = Column(BigInteger)
     updated_at = Column(BigInteger)
     name = Column(Text)
-    system_id = Column(BigInteger)
+    system_id = Column(BigInteger, ForeignKey('system.id'))
     group_id = Column(Integer)
     group_name = Column(Text)
     type_id = Column(BigInteger)
@@ -80,7 +80,6 @@ class Body(Base):
     solid_composition = Column(JSON)        # I AM NOT
     materials = Column(JSON)                # DEALING WITH YOU
     is_landable = Column(BigInteger)
-    a = relationship('System', foreign_keys=[id], primaryjoin='System.id == Body.system_id')
 
 class System(Base):
     __tablename__ = 'systems'
@@ -112,6 +111,7 @@ class System(Base):
     controlling_minor_faction = Column(Text)
     reserve_type_id = Column(Integer)
     reserve_type = Column(Text)
+    bodies = relationship("Body")
 
 class Root(object):
     __acl__ = [(Allow, Everyone, 'view'),
