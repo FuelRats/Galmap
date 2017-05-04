@@ -1,5 +1,7 @@
 import os
 import sys
+from datetime import time
+
 from odo import odo, dshape
 
 import requests
@@ -34,14 +36,17 @@ def main(argv=sys.argv):
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     # Add all the systems!
+    if sys.path.getmtime('systems.csv') > time.time()-(24*3600):
+        print("Using cached systems.csv")
+    else:
+        print("Downloading systems.csv from EDDB.io...")
+        r = requests.get("https://eddb.io/archive/v5/systems.csv", stream=True)
+        with open('systems.csv', 'wb') as f:
+            for chunk in r.iter_content(chunk_size=4096):
+                if chunk:
+                    f.write(chunk)
+        print("Saved systems.csv. Converting CSV to SQL.")
 
-    print("Downloading systems.csv from EDDB.io...")
-    r = requests.get("https://eddb.io/archive/v5/systems.csv", stream=True)
-    with open('systems.csv', 'wb') as f:
-        for chunk in r.iter_content(chunk_size=4096):
-            if chunk:
-                f.write(chunk)
-    print("Saved systems.csv. Converting CSV to SQL.")
     ds = dshape("var *{  id: ?int64,  edsm_id: ?int64,  name: ?string,  x: ?float64,  y: ?float64,  "
                 "z: ?float64,  population: ?int64,  is_populated: ?int64,  government_id: ?int64,  "
                 "government: ?string,  allegiance_id: ?int64,  allegiance: ?string,  "
@@ -57,12 +62,15 @@ def main(argv=sys.argv):
     print("Creating indexes...")
     DBSession.execute("CREATE INDEX systems_idx on systems(name)")
     print("Done!")
-    print("Downloading bodies.json from EDDB.io...")
-    r = requests.get("https://eddb.io.archive/v5/bodies.jsonl", stream=True)
-    with open('bodies.jsonl', 'wb') as f:
-        for chunk in r.iter_content(chunk_size=4096):
-            if chunk:
-                f.write(chunk)
+    if sys.path.getmtime('bodies.jsonl') > time.time() - (24 * 3600):
+        print("Using cached bodies.jsonl")
+    else:
+        print("Downloading bodies.jsonl from EDDB.io...")
+        r = requests.get("https://eddb.io.archive/v5/bodies.jsonl", stream=True)
+        with open('bodies.jsonl', 'wb') as f:
+            for chunk in r.iter_content(chunk_size=4096):
+                if chunk:
+                    f.write(chunk)
     print("Saved bodies.jsonl. Converting JSONL to SQL.")
     ds = dshape("var *{ id: ?int64, created_at: ?int64, updated_at: ?int64, name: ?string, "
                 "system_id: ?int64, group_id: ?int64, group_name: ?string, type_id: ?int64, "
