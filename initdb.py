@@ -32,42 +32,42 @@ def main(argv=sys.argv):
     settings = get_appsettings(config_uri)
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
-    Base.metadata.drop_all(engine)
+    #Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     # Add all the systems!
-    if os.path.isfile('systems.csv'):
-        if datetime.fromtimestamp(os.path.getmtime('systems.csv')) > datetime.today()-timedelta(days=7):
-            print("Using cached systems.csv")
-    else:
-        print("Downloading systems.csv from EDDB.io...")
-        r = requests.get("https://eddb.io/archive/v5/systems.csv", stream=True)
-        with open('systems.csv', 'wb') as f:
-            for chunk in r.iter_content(chunk_size=4096):
-                if chunk:
-                    f.write(chunk)
-        print("Saved systems.csv. Converting CSV to SQL.")
+    #if os.path.isfile('systems.csv'):
+    #    if datetime.fromtimestamp(os.path.getmtime('systems.csv')) > datetime.today()-timedelta(days=7):
+    #        print("Using cached systems.csv")
+    #else:
+    #    print("Downloading systems.csv from EDDB.io...")
+    #    r = requests.get("https://eddb.io/archive/v5/systems.csv", stream=True)
+    #    with open('systems.csv', 'wb') as f:
+    #        for chunk in r.iter_content(chunk_size=4096):
+    #            if chunk:
+    #                f.write(chunk)
+    #    print("Saved systems.csv. Converting CSV to SQL.")
 
-    ds = dshape("var *{  id: ?int64,  edsm_id: ?int64,  name: ?string,  x: ?float64,  y: ?float64,  "
-                "z: ?float64,  population: ?int64,  is_populated: ?int64,  government_id: ?int64,  "
-                "government: ?string,  allegiance_id: ?int64,  allegiance: ?string,  "
-                "state_id: ?int64,  state: ?string,  security_id: ?float64,  security: ?string,  "
-                "primary_economy_id: ?float64,  primary_economy: ?string,  power: ?string,  "
-                "power_state: ?string,  power_state_id: ?string,  needs_permit: ?int64,  "
-                "updated_at: ?int64,  simbad_ref: ?string,  controlling_minor_faction_id: ?string,  "
-                "controlling_minor_faction: ?string,  reserve_type_id: ?float64,  reserve_type: ?string  }")
-    url = str(engine.url) + "::" + System.__tablename__
-    t = odo('systems.csv', url, dshape=ds)
-    print("Uppercasing system names...")
-    DBSession.execute("UPDATE systems set name = UPPER(name)")
-    print("Creating indexes...")
-    DBSession.execute("CREATE INDEX systems_idx on systems(name)")
-    print("Done!")
+    #ds = dshape("var *{  id: ?int64,  edsm_id: ?int64,  name: ?string,  x: ?float64,  y: ?float64,  "
+    #            "z: ?float64,  population: ?int64,  is_populated: ?int64,  government_id: ?int64,  "
+    #            "government: ?string,  allegiance_id: ?int64,  allegiance: ?string,  "
+    #            "state_id: ?int64,  state: ?string,  security_id: ?float64,  security: ?string,  "
+    #            "primary_economy_id: ?float64,  primary_economy: ?string,  power: ?string,  "
+    #            "power_state: ?string,  power_state_id: ?string,  needs_permit: ?int64,  "
+    #            "updated_at: ?int64,  simbad_ref: ?string,  controlling_minor_faction_id: ?string,  "
+    #            "controlling_minor_faction: ?string,  reserve_type_id: ?float64,  reserve_type: ?string  }")
+    #url = str(engine.url) + "::" + System.__tablename__
+    #t = odo('systems.csv', url, dshape=ds)
+    #print("Uppercasing system names...")
+    #DBSession.execute("UPDATE systems set name = UPPER(name)")
+    #print("Creating indexes...")
+    #DBSession.execute("CREATE INDEX systems_idx on systems(name)")
+    #print("Done!")
     if os.path.isfile('bodies.jsonl'):
         if datetime.fromtimestamp(os.path.getmtime('bodies.jsonl')) >  datetime.today()-timedelta(days=7):
             print("Using cached bodies.jsonl")
     else:
         print("Downloading bodies.jsonl from EDDB.io...")
-        r = requests.get("https://eddb.io.archive/v5/bodies.jsonl", stream=True)
+        r = requests.get("https://eddb.io/archive/v5/bodies.jsonl", stream=True)
         with open('bodies.jsonl', 'wb') as f:
             for chunk in r.iter_content(chunk_size=4096):
                 if chunk:
