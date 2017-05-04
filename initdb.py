@@ -31,8 +31,7 @@ def main(argv=sys.argv):
     settings = get_appsettings(config_uri)
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
-    Body.drop(engine, checkfirst=True)
-    System.drop(engine, checkfirst=True)
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     # Add all the systems!
 
