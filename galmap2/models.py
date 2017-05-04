@@ -3,6 +3,7 @@ from pyramid.security import Allow, Everyone
 from sqlalchemy import (
     Column,
     Integer,
+    BigInteger,
     Text,
     Float,
     Boolean,
@@ -41,9 +42,9 @@ class Body(Base):
     spectral_sub_class = Column(Text)
     luminosity_class = Column(Text)
     luminosity_sub_class = Column(Text)
-    surface_temperature = Column(Integer)
+    surface_temperature = Column(BigInteger)
     is_main_star = Column(Boolean)
-    age = Column(Integer)
+    age = Column(BigInteger)
     solar_masses = Column(Float)
     solar_radius = Column(Float)
     catalogue_gliese_id = Column(Integer)
@@ -56,9 +57,9 @@ class Body(Base):
     terraforming_state_id = Column(Integer)
     terraforming_state_name = Column(Text)
     earth_masses = Column(Float)
-    radius = Column(Integer)
+    radius = Column(BigInteger)
     gravity = Column(Float)
-    surface_pressure = Column(Integer)
+    surface_pressure = Column(BigInteger)
     orbital_period = Column(Float)
     semi_major_axis = Column(Float)
     orbital_eccentricity = Column(Float)
@@ -88,7 +89,7 @@ class System(Base):
     x = Column(Float)
     y = Column(Float)
     z = Column(Float)
-    population = Column(Integer)
+    population = Column(BigInteger)
     is_populated = Column(Integer)
     government_id = Column(Integer)
     government = Column(Text)
