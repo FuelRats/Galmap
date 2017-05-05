@@ -14,7 +14,9 @@ Getting Started
 
 - $VENV/bin/pip install -e .
 
-- $VENV/bin/python initdb.py development#mainapp
+- Copy development.ini.default or production.ini.default to galmap.ini and configure.
 
-- $VENV/bin/pserve development.ini
+- $VENV/bin/python initdb.py galmap#mainapp
+
+- $VENV/bin/pserve galmap.ini
 
