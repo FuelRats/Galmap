@@ -22,7 +22,7 @@ def galmap_view(request):
 
 @view_config(route_name='rats', renderer='templates/rats.pt')
 def rats_view(request):
-    settings = request.registry.settings()
+    settings = request.registry.settings
     bearer_token = settings['bearer_token']
     response = requests.get("https://api.fuelrats.com/rats?bearer=" +
                             bearer_token + "&limit=2000", verify=False)
@@ -39,7 +39,7 @@ def rats_view(request):
 
 @view_config(route_name='view_today', renderer='templates/galmap.pt')
 def view_today(request):
-    settings = request.registry.settings()
+    settings = request.registry.settings
     bearer_token = settings['bearer_token']
     today = datetime.now() - timedelta(days=1)
     url = "https://api.fuelrats.com/rescues?bearer=" + \
@@ -72,7 +72,7 @@ def view_today(request):
 # @view_config(route_name='view_rat', renderer='templates/galmap.pt')
 @view_config(request_method='POST', route_name='view_rat', renderer='templates/galmap.pt')
 def view_rat_view(request):
-    settings = request.registry.settings()
+    settings = request.registry.settings
     bearer_token = settings['bearer_token']
     fields = {}
     if not request.params:
@@ -132,7 +132,7 @@ def view_api(request):
 
 @view_config(route_name='view_api', renderer='json')
 def view_api(request):
-    settings = request.registry.settings()
+    settings = request.registry.settings
     bearer_token = settings['bearer_token']
     fields = {}
     if not request.params:
