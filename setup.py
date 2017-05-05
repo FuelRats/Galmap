@@ -15,7 +15,7 @@ requires = [
     'waitress',
     'sqlalchemy',
     'zope.sqlalchemy', 'requests', 'odo', 'colander', 'deform', 'wsgicors', 'pyramid_jsonapi',
-    'psycopg2', 'odo'
+    'psycopg2', 'odo', 'sqlalchemy_searchable'
     ]
 
 tests_require = [
@@ -25,7 +25,7 @@ tests_require = [
     ]
 
 setup(name='galmap2',
-      version='0.0',
+      version='0.1',
       description='galmap2',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

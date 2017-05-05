@@ -2,14 +2,15 @@ import json
 import logging
 import requests
 from datetime import date, datetime, timedelta
-import colander, deform.widget
 
+from pyramid.config import settings
 from pyramid.view import view_config
+
 from .models import DBSession, System
 
-
-
 log = logging.getLogger(__name__)
+bearer_token = settings.get('bearer_token')
+
 
 @view_config(route_name='home', renderer='templates/mytemplate.pt')
 def home_view(request):
@@ -23,14 +24,15 @@ def galmap_view(request):
 
 @view_config(route_name='rats', renderer='templates/rats.pt')
 def rats_view(request):
-    response = requests.get("https://api.fuelrats.com/rats?limit=2000", verify=False)
+    response = requests.get("https://api.fuelrats.com/rats?bearer=" +
+                            bearer_token + "&limit=2000", verify=False)
     response.encoding = 'utf-8'
     tempjson = response.json()
     rats = []
-    #log.debug("Got rats:"+str(tempjson))
+    # log.debug("Got rats:"+str(tempjson))
     for CMDRName in tempjson['data']:
         rats.append(CMDRName['CMDRname'])
-    jrats=json.dumps(rats)
+    jrats = json.dumps(rats)
     return {'project': 'galmap2',
             'rats': jrats}
 
@@ -38,7 +40,8 @@ def rats_view(request):
 @view_config(route_name='view_today', renderer='templates/galmap.pt')
 def view_today(request):
     today = datetime.now() - timedelta(days=1)
-    url = "https://api.fuelrats.com/rescues?createdAtAfter=" + str(today)
+    url = "https://api.fuelrats.com/rescues?bearer=" + \
+          bearer_token + "&createdAtAfter=" + str(today)
     log.debug("Hitting URL: " + url)
     response = requests.get(url, verify=False)
     tempjson = response.json()
@@ -54,17 +57,17 @@ def view_today(request):
         syscoords = coords
         systems.append({"name": rescue['system'],
                         "coords": syscoords,
-                        "infos":"<h2><center>Rescue data:</center></h2><br>"+
-                        "<b>Date</b>: "+rescue['createdAt']+"<br><b>Platform: </b>"+
-                        rescue['platform']+"<br><b>Epic:</b> "+str(rescue['epic'])+
-                        "<br><b>Code Red:</b> "+str(rescue['codeRed'])
+                        "infos": "<h2><center>Rescue data:</center></h2><br>" +
+                                 "<b>Date</b>: " + rescue['createdAt'] + "<br><b>Platform: </b>" +
+                                 rescue['platform'] + "<br><b>Epic:</b> " + str(rescue['epic']) +
+                                 "<br><b>Code Red:</b> " + str(rescue['codeRed'])
                         })
     return {'project': 'galmap2',
             'title': 'Rescues for ' + str(today),
             'json': json.dumps(systems)}
 
 
-#@view_config(route_name='view_rat', renderer='templates/galmap.pt')
+# @view_config(route_name='view_rat', renderer='templates/galmap.pt')
 @view_config(request_method='POST', route_name='view_rat', renderer='templates/galmap.pt')
 def view_rat_view(request):
     fields = {}
@@ -74,16 +77,17 @@ def view_rat_view(request):
     if 'rat' not in request.params:
         fields = {"error", "No rat provided."}
         return fields
-    log.debug("Params: "+str(request.params))
+    log.debug("Params: " + str(request.params))
     rat = request.params['rat']
-    #rat = "e8fc095a-4561-4237-a890-83b859e85156"
-    url = "https://api.fuelrats.com/rats?CMDRname=" + rat
+    # rat = "e8fc095a-4561-4237-a890-83b859e85156"
+    url = "https://api.fuelrats.com/rats?bearer=" + bearer_token + "CMDRname=" + rat
     response = requests.get(url, verify=False)
     tempjson = response.json()
-    log.debug("Got rat response: " + str(tempjson)+" type "+ str(type(tempjson)))
+    log.debug("Got rat response: " + str(tempjson) + " type " + str(type(tempjson)))
     ratid = tempjson['data'][0]['id']
-    log.debug("RatID:"+ratid)
-    url = "https://api.fuelrats.com/rescues?limit=500&firstLimpet=" + str(ratid)
+    log.debug("RatID:" + ratid)
+    url = "https://api.fuelrats.com/rescues?bearer=" + bearer_token + \
+          "limit=500&firstLimpet=" + str(ratid)
     rescueres = requests.get(url, verify=False)
     log.debug("Text version:" + rescueres.text)
     rescuejson = rescueres.json()
@@ -101,15 +105,17 @@ def view_rat_view(request):
         syscoords = coords
         systems.append({"name": rescue['system'],
                         "coords": syscoords,
-                        "infos":"<h2><center>Rescue data:</center></h2><br>"+
-                        "<b>Date</b>: "+rescue['createdAt']+"<br><b>Platform: </b>"+
-                        rescue['platform']+"<br><b>Epic:</b> "+str(rescue['epic'])+
-                        "<br><b>Code Red:</b> "+str(rescue['codeRed'])
+                        "infos": "<h2><center>Rescue data:</center></h2><br>" +
+                                 "<b>Date</b>: " + rescue['createdAt'] + "<br><b>Platform: </b>" +
+                                 rescue['platform'] + "<br><b>Epic:</b> " + str(rescue['epic']) +
+                                 "<br><b>Code Red:</b> " + str(rescue['codeRed'])
                         })
     rescues.append({"systems": systems})
     return {'project': 'galmap2',
-            'title': 'Rescues for '+rat,
+            'title': 'Rescues for ' + rat,
             'json': json.dumps(systems)}
+
+
 @view_config(route_name='view_api', request_method='OPTIONS')
 def view_api(request):
     request.response.headerlist.extend(
@@ -119,11 +125,12 @@ def view_api(request):
         ))
     return request
 
+
 @view_config(route_name='view_api', renderer='json')
 def view_api(request):
     fields = {}
     if not request.params:
-        fields["error"]="No parameters provided."
+        fields["error"] = "No parameters provided."
         return fields
     if 'name' not in request.params:
         fields["error"] = "Missing system name parameter."
@@ -135,7 +142,7 @@ def view_api(request):
         data = sysreq.__getattribute__(field)
         try:
             json.dumps(data)
-            fields[field]=data
+            fields[field] = data
         except TypeError:
-            fields[field]=None
+            fields[field] = None
     return fields

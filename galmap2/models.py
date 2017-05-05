@@ -11,12 +11,15 @@ from sqlalchemy import (
     ForeignKey)
 
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy_searchable import make_searchable
+from sqlalchemy_utils.types import TSVectorType
 
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
     relationship
 )
+from sqlalchemy.dialects.postgresql import TSVECTOR
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
@@ -24,6 +27,7 @@ DBSession = scoped_session(
     sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
+make_searchable()
 
 class Body(Base):
     __tablename__ = 'bodies'
@@ -112,6 +116,7 @@ class System(Base):
     reserve_type_id = Column(Integer)
     reserve_type = Column(Text)
     bodies = relationship("Body")
+    search_vector = Column(TSVectorType('name'))
 
 class Root(object):
     __acl__ = [(Allow, Everyone, 'view'),
