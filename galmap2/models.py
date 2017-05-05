@@ -75,11 +75,12 @@ class Body(Base):
     ring_mass = Column(BigInteger)
     ring_inner_radius = Column(Float)
     ring_outer_radius = Column(Float)
-    rings = Column(JSON)                    # FUCK YOU
-    atmosphere_composition = Column(JSON)   # NESTED JSON
-    solid_composition = Column(JSON)        # I AM NOT
-    materials = Column(JSON)                # DEALING WITH YOU
+    rings = Column(JSON)  # FUCK YOU
+    atmosphere_composition = Column(JSON)  # NESTED JSON
+    solid_composition = Column(JSON)  # I AM NOT
+    materials = Column(JSON)  # DEALING WITH YOU
     is_landable = Column(BigInteger)
+
 
 class System(Base):
     __tablename__ = 'systems'
@@ -112,6 +113,7 @@ class System(Base):
     reserve_type_id = Column(Integer)
     reserve_type = Column(Text)
     bodies = relationship("Body")
+
 
 class Root(object):
     __acl__ = [(Allow, Everyone, 'view'),
