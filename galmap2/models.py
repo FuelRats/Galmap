@@ -25,7 +25,6 @@ DBSession = scoped_session(
     sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
-make_searchable()
 
 class Body(Base):
     __tablename__ = 'bodies'
