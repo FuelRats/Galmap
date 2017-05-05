@@ -17,7 +17,6 @@ from sqlalchemy.orm import (
     sessionmaker,
     relationship
 )
-from sqlalchemy.dialects.postgresql import TSVECTOR
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
@@ -113,7 +112,6 @@ class System(Base):
     reserve_type_id = Column(Integer)
     reserve_type = Column(Text)
     bodies = relationship("Body")
-    search_vector = Column(TSVectorType('name'))
 
 class Root(object):
     __acl__ = [(Allow, Everyone, 'view'),
