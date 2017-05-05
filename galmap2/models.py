@@ -11,7 +11,6 @@ from sqlalchemy import (
     ForeignKey)
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy_searchable import make_searchable
 from sqlalchemy_utils.types import TSVectorType
 
 from sqlalchemy.orm import (
