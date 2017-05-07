@@ -2,3 +2,11 @@
 ---
 
 -  Initial version
+
+0.1
+---
+
+- Include bodies in database
+- Add JsonAPI for systems and bodies
+- Handle bearer token authentication for rescues API.
+
