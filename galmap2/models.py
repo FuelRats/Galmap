@@ -8,7 +8,9 @@ from sqlalchemy import (
     Float,
     Boolean,
     JSON,
-    ForeignKey)
+    ForeignKey
+    )
+from sqlalchemy.dialects.postgresql import TSVECTOR
 
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -112,6 +114,7 @@ class System(Base):
     controlling_minor_faction = Column(Text)
     reserve_type_id = Column(Integer)
     reserve_type = Column(Text)
+    namevector = Column(TSVECTOR)
     bodies = relationship("Body")
 
 

@@ -26,9 +26,13 @@ bearer_token =
 ###
 
 [server:main]
-use = egg:waitress#main
+use = egg:gunicorn#main
 host = 0.0.0.0
 port = 6543
+worker_class = aiopyramid.gunicorn.worker.AsyncGunicornWorker
+#Set these to your SSL certificates if using SSL.
+#certfile =
+#keyfile =
 
 [pipeline:main]
 pipeline =

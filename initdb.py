@@ -62,7 +62,8 @@ def main(argv=sys.argv):
     print("Uppercasing system names...")
     DBSession.execute("UPDATE systems set name = UPPER(name)")
     print("Creating indexes...")
-    DBSession.execute("CREATE INDEX systems_idx on systems(name)")
+    DBSession.execute("CREATE INDEX systems_idx on systems(name text_pattern_ops)")
+
     print("Done!")
 
     if os.path.isfile('bodies.json'):
@@ -96,7 +97,7 @@ def main(argv=sys.argv):
     url = str(engine.url) + "::" + Body.__tablename__
     t = odo('jsonlines://bodies.json', url, dshape=ds)
     print("Creating indexes...")
-    DBSession.execute("CREATE INDEX bodies_idx on bodies(name)")
+    DBSession.execute("CREATE INDEX bodies_idx on bodies(name text_pattern_ops)")
     DBSession.execute("CREATE INDEX systemid_idx on bodies(system_id)")
     print("Done!")
 main()

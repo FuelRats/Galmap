@@ -15,7 +15,7 @@ requires = [
     'waitress',
     'sqlalchemy',
     'zope.sqlalchemy', 'requests', 'odo', 'colander', 'deform', 'wsgicors', 'pyramid_jsonapi',
-    'psycopg2', 'odo', 'pyramid_beaker'
+    'psycopg2', 'odo', 'pyramid_beaker', 'aiopyramid'
     ]
 
 tests_require = [
