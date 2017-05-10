@@ -9,7 +9,7 @@ from sqlalchemy import (
     Boolean,
     JSON,
     ForeignKey
-    )
+)
 from sqlalchemy.dialects.postgresql import TSVECTOR
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -83,39 +83,40 @@ class Body(Base):
     materials = Column(JSON)  # DEALING WITH YOU
     is_landable = Column(BigInteger)
 
+
 class Populated_system(Base):
-    class System(Base):
-        __tablename__ = 'populated_systems'
-        id = Column(Integer, primary_key=True)
-        edsm_id = Column(Integer)
-        name = Column(Text)
-        x = Column(Float)
-        y = Column(Float)
-        z = Column(Float)
-        population = Column(BigInteger)
-        is_populated = Column(Integer)
-        government_id = Column(Integer)
-        government = Column(Text)
-        allegiance_id = Column(Integer)
-        allegiance = Column(Text)
-        state_id = Column(Integer)
-        state = Column(Text)
-        security_id = Column(Integer)
-        security = Column(Text)
-        primary_economy_id = Column(Integer)
-        primary_economy = Column(Text)
-        power = Column(Text)
-        power_state = Column(Text)
-        power_state_id = Column(Integer)
-        needs_permit = Column(Integer)
-        updated_at = Column(Integer)
-        simbad_ref = Column(Text)
-        controlling_minor_faction_id = Column(Integer)
-        controlling_minor_faction = Column(Text)
-        reserve_type_id = Column(Integer)
-        reserve_type = Column(Text)
-        minor_faction_presences = Column(JSON)
-        bodies = relationship("Body")
+    __tablename__ = 'populated_systems'
+    id = Column(Integer, primary_key=True)
+    edsm_id = Column(Integer)
+    name = Column(Text)
+    x = Column(Float)
+    y = Column(Float)
+    z = Column(Float)
+    population = Column(BigInteger)
+    is_populated = Column(Integer)
+    government_id = Column(Integer)
+    government = Column(Text)
+    allegiance_id = Column(Integer)
+    allegiance = Column(Text)
+    state_id = Column(Integer)
+    state = Column(Text)
+    security_id = Column(Integer)
+    security = Column(Text)
+    primary_economy_id = Column(Integer)
+    primary_economy = Column(Text)
+    power = Column(Text)
+    power_state = Column(Text)
+    power_state_id = Column(Integer)
+    needs_permit = Column(Integer)
+    updated_at = Column(Integer)
+    simbad_ref = Column(Text)
+    controlling_minor_faction_id = Column(Integer)
+    controlling_minor_faction = Column(Text)
+    reserve_type_id = Column(Integer)
+    reserve_type = Column(Text)
+    minor_faction_presences = Column(JSON)
+    bodies = relationship("Body")
+
 
 class System(Base):
     __tablename__ = 'systems'
