@@ -55,7 +55,8 @@ def main(argv=sys.argv):
                 "primary_economy_id: ?float64,  primary_economy: ?string,  power: ?string,  "
                 "power_state: ?string,  power_state_id: ?string,  needs_permit: ?int64,  "
                 "updated_at: ?int64,  simbad_ref: ?string,  controlling_minor_faction_id: ?string,  "
-                "controlling_minor_faction: ?string,  reserve_type_id: ?float64,  reserve_type: ?string  }")
+                "controlling_minor_faction: ?string,  reserve_type_id: ?float64,  reserve_type: ?string, "
+                "minor_faction_presences: ?json  }")
     url = str(engine.url) + "::" + System.__tablename__
     t = odo('systems.csv', url, dshape=ds)
 
