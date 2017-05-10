@@ -62,7 +62,7 @@ def main(argv=sys.argv):
     print("Uppercasing system names...")
     DBSession.execute("UPDATE systems set name = UPPER(name)")
     print("Creating indexes...")
-    DBSession.execute("create index concurrently index_system_names_trigram on systems using gin(name gin_trgm_ops)")
+    DBSession.execute("create index index_system_names_trigram on systems using gin(name gin_trgm_ops)")
 
     print("Done!")
 
@@ -94,7 +94,7 @@ def main(argv=sys.argv):
     print("Uppercasing system names...")
     DBSession.execute("UPDATE systems_populated set name = UPPER(name)")
     print("Creating indexes...")
-    DBSession.execute("CREATE index concurrently index_populated_system_names_trigram on populated_systems using gin(name gin_trgm_ops)")
+    DBSession.execute("CREATE index index_populated_system_names_trigram on populated_systems using gin(name gin_trgm_ops)")
 
     print("Done!")
 
