@@ -83,7 +83,6 @@ class Body(Base):
     materials = Column(JSON)  # DEALING WITH YOU
     is_landable = Column(BigInteger)
 
-
 class System(Base):
     __tablename__ = 'systems'
     id = Column(Integer, primary_key=True)
@@ -114,7 +113,7 @@ class System(Base):
     controlling_minor_faction = Column(Text)
     reserve_type_id = Column(Integer)
     reserve_type = Column(Text)
-    namevector = Column(TSVECTOR)
+    minor_faction_presences = Column(JSON)
     bodies = relationship("Body")
 
 

@@ -62,12 +62,12 @@ def main(argv=sys.argv):
     print("Uppercasing system names...")
     DBSession.execute("UPDATE systems set name = UPPER(name)")
     print("Creating indexes...")
-    DBSession.execute("CREATE INDEX systems_idx on systems(name text_pattern_ops)")
+    DBSession.execute("create index concurrently index_system_names_trigram on systems using gin(name gin_trgm_ops)")
 
     print("Done!")
 
     if os.path.isfile('bodies.json'):
-        if datetime.fromtimestamp(os.path.getmtime('bodies.json')) >  datetime.today()-timedelta(days=7):
+        if datetime.fromtimestamp(os.path.getmtime('bodies.json')) > datetime.today()-timedelta(days=7):
             print("Using cached bodies.json")
     else:
         print("Downloading bodies.jsonl from EDDB.io...")
