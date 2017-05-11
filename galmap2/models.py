@@ -10,9 +10,10 @@ from sqlalchemy import (
     JSON,
     ForeignKey
 )
-from sqlalchemy.dialects.postgresql import TSVECTOR
+
 
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.dialects.postgresql import JSONB
 
 from sqlalchemy.orm import (
     scoped_session,
@@ -77,14 +78,86 @@ class Body(Base):
     ring_mass = Column(BigInteger)
     ring_inner_radius = Column(Float)
     ring_outer_radius = Column(Float)
-    rings = Column(JSON)  # FUCK YOU
-    atmosphere_composition = Column(JSON)  # NESTED JSON
-    solid_composition = Column(JSON)  # I AM NOT
-    materials = Column(JSON)  # DEALING WITH YOU
+    rings = Column(JSONB)  # FUCK YOU
+    atmosphere_composition = Column(JSONB)  # NESTED JSON
+    solid_composition = Column(JSONB)  # I AM NOT
+    materials = Column(JSONB)  # DEALING WITH YOU
     is_landable = Column(BigInteger)
+    stations = relationship(Station)
 
 
-class Populated_system(Base):
+class Faction(Base):
+    __tablename__ = 'factions'
+    id = Column(Integer, primary_key=True)
+    name = Column(Text)
+    updated_at = Column(BigInteger)
+    government_id = Column(BigInteger)
+    government= Column(Text)
+    allegiance_id = Column(BigInteger)
+    allegiance = Column(Text)
+    state_id = Column(Integer)
+    state = Column(Text)
+    home_system_id = Column(BigInteger)
+    is_player_faction = Column(Integer)
+
+
+class Station(Base):
+    __tablename__ = 'stations'
+    id = Column(Integer, primary_key=True)
+    name = Column(Text)
+    system_id = Column(BigInteger)
+    updated_at = Column(BigInteger)
+    max_landing_pad_size = Column(Text)
+    distance_to_star = Column(BigInteger)
+    government_id = Column(Integer)
+    government = Column(Text)
+    allegiance_id = Column(Integer)
+    allegiance = Column(Text)
+    state_id = Column(Integer)
+    state = Column(Text)
+    type_id = Column(Integer)
+    type = Column(Text)
+    has_blackmarket = Column(Boolean)
+    has_market = Column(Boolean)
+    has_refuel = Column(Boolean)
+    has_repair = Column(Boolean)
+    has_rearm = Column(Boolean)
+    has_outfitting = Column(Boolean)
+    has_shipyard = Column(Boolean)
+    has_docking = Column(Boolean)
+    has_commodities = Column(Boolean)
+    import_commodities = Column(JSONB)
+    export_commodities = Column(JSONB)
+    prohibited_commodities = Column(JSONB)
+    economies = Column(JSONB)
+    shipyard_updated_at = Column(BigInteger)
+    outfitting_updated_at = Column(BigInteger)
+    market_updated_at = Column(BigInteger)
+    is_planetary = Column(Boolean)
+    selling_ships = Column(JSONB)
+    selling_modules = Column(JSONB)
+    settlement_size_id = Column(Integer)
+    settlement_size = Column(BigInteger)
+    settlement_security_id = Column(Integer)
+    settlement_security = Column(Text)
+    body_id = Column(BigInteger, ForeignKey('bodies.id'))
+    controlling_minor_faction_id = Column(BigInteger)
+    listings = relationship(Listing)
+
+
+class Listing(Base):
+    __tablename__ = 'listings'
+    id = Column(BigInteger, primary_key=True)
+    station_id = Column(BigInteger, ForeignKey('stations.id'))
+    commodity = Column(Integer)
+    supply = Column(Integer)
+    buy_price = Column(Integer)
+    sell_price = Column(Integer)
+    demand = Column(Integer)
+    collected_at = Column(BigInteger)
+
+
+class PopulatedSystem(Base):
     __tablename__ = 'populated_systems'
     id = Column(Integer, primary_key=True)
     edsm_id = Column(Integer)
@@ -93,7 +166,7 @@ class Populated_system(Base):
     y = Column(Float)
     z = Column(Float)
     population = Column(BigInteger)
-    is_populated = Column(Integer)
+    is_populated = Column(Boolean)
     government_id = Column(Integer)
     government = Column(Text)
     allegiance_id = Column(Integer)
@@ -107,15 +180,14 @@ class Populated_system(Base):
     power = Column(Text)
     power_state = Column(Text)
     power_state_id = Column(Integer)
-    needs_permit = Column(Integer)
+    needs_permit = Column(Boolean)
     updated_at = Column(Integer)
     simbad_ref = Column(Text)
     controlling_minor_faction_id = Column(Integer)
     controlling_minor_faction = Column(Text)
     reserve_type_id = Column(Integer)
     reserve_type = Column(Text)
-    minor_faction_presences = Column(JSON)
-    bodies = relationship("Body")
+    minor_faction_presences = Column(JSONB)
 
 
 class System(Base):

@@ -20,3 +20,7 @@ Getting Started
 
 - $VENV/bin/pserve galmap.ini
 
+id,name,updated_at,government_id,government,allegiance_id,allegiance,state_id,state,home_system_id,is_player_faction
+1,"39 b Draconis One",1493999533,80,Cooperative,4,Independent,73,War,185,0
+
+
