@@ -7,7 +7,6 @@ from sqlalchemy import (
     Text,
     Float,
     Boolean,
-    JSON,
     ForeignKey
 )
 
@@ -83,7 +82,7 @@ class Body(Base):
     solid_composition = Column(JSONB)  # I AM NOT
     materials = Column(JSONB)  # DEALING WITH YOU
     is_landable = Column(BigInteger)
-    stations = relationship(Station)
+    stations = relationship("Station")
 
 
 class Faction(Base):
@@ -142,7 +141,7 @@ class Station(Base):
     settlement_security = Column(Text)
     body_id = Column(BigInteger, ForeignKey('bodies.id'))
     controlling_minor_faction_id = Column(BigInteger)
-    listings = relationship(Listing)
+    listings = relationship("Listing")
 
 
 class Listing(Base):
