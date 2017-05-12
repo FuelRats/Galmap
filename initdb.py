@@ -73,8 +73,8 @@ def main(argv=sys.argv):
     #
     # Populated Systems
     #
-    if os.path.isfile('systems_populated.jsonl'):
-        if datetime.fromtimestamp(os.path.getmtime('systems_populated.jsonl')) > datetime.today()-timedelta(days=7):
+    if os.path.isfile('systems_populated.json'):
+        if datetime.fromtimestamp(os.path.getmtime('systems_populated.json')) > datetime.today()-timedelta(days=7):
             print("Using cached systems.csv")
     else:
         print("Downloading systems_populated.jsonl from EDDB.io...")
@@ -83,7 +83,7 @@ def main(argv=sys.argv):
             for chunk in r.iter_content(chunk_size=4096):
                 if chunk:
                     f.write(chunk)
-        print("Saved systems_populated.jsonl. Converting JSONL to SQL.")
+        print("Saved systems_populated.json. Converting JSONL to SQL.")
 
     url = str(engine.url) + "::" + PopulatedSystem.__tablename__
     ds = dshape("var *{  id: ?int64,  edsm_id: ?int64,  name: ?string,  x: ?float64,  y: ?float64,  "
