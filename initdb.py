@@ -67,7 +67,7 @@ def main(argv=sys.argv):
     DBSession.execute("UPDATE systems set name = UPPER(name)")
     print("Creating indexes...")
     DBSession.execute("create index index_system_names_trigram on systems using gin(name gin_trgm_ops)")
-
+    DBSession.execute("create index index_system_names_btree on systems (name)")
     print("Done!")
 
     #
@@ -101,6 +101,7 @@ def main(argv=sys.argv):
     DBSession.execute("UPDATE populated_systems set name = UPPER(name)")
     print("Creating indexes...")
     DBSession.execute("CREATE index index_populated_system_names_trigram on populated_systems using gin(name gin_trgm_ops)")
+    DBSession.execute("create index index_populated_system_names_btree on systems (name)")
 
     print("Done!")
 
@@ -113,7 +114,7 @@ def main(argv=sys.argv):
     else:
         print("Downloading factions.jsonl from EDDB.io...")
         r = requests.get("https://eddb.io/archive/v5/factions.jsonl", stream=True)
-        with open('systems_populated.json', 'wb') as f:
+        with open('factions.json', 'wb') as f:
             for chunk in r.iter_content(chunk_size=4096):
                 if chunk:
                     f.write(chunk)
@@ -123,7 +124,7 @@ def main(argv=sys.argv):
     ds = dshape("var *{  id: ?int64,  name: ?string,  updated_at: ?int64,  government_id: ?int64,  "
                 "government: ?string,  allegiance_id: ?int64,  allegiance: ?string,  "
                 "state_id: ?int64,  state: ?string, home_system_id: ?int64,  "
-                "is_player_faction: ?boolean }")
+                "is_player_faction: ?bool }")
     t = odo('jsonlines://factions.json', url, dshape=ds)
     print("Done!")
     DBSession.execute("create index factions_idx on factions(id)")
@@ -158,7 +159,7 @@ def main(argv=sys.argv):
                 "belt_moon_masses: ?float64, ring_type_id: ?int64, ring_type_name: ?string, "
                 "ring_mass: ?int64, ring_inner_radius: ?float64, ring_outer_radius: ?float64, "
                 "rings: ?json, atmosphere_composition: ?json, solid_composition: ?json, "
-                "materials: ?json, is_landable: ?int64}")
+                "materials: ?json, is_landable: ?bool}")
     url = str(engine.url) + "::" + Body.__tablename__
     t = odo('jsonlines://bodies.json', url, dshape=ds)
     print("Creating indexes...")

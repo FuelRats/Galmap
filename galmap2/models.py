@@ -81,9 +81,8 @@ class Body(Base):
     atmosphere_composition = Column(JSONB)  # NESTED JSON
     solid_composition = Column(JSONB)  # I AM NOT
     materials = Column(JSONB)  # DEALING WITH YOU
-    is_landable = Column(BigInteger)
+    is_landable = Column(Boolean)
     stations = relationship("Station")
-
 
 class Faction(Base):
     __tablename__ = 'factions'
@@ -97,7 +96,7 @@ class Faction(Base):
     state_id = Column(Integer)
     state = Column(Text)
     home_system_id = Column(BigInteger)
-    is_player_faction = Column(Integer)
+    is_player_faction = Column(Boolean)
 
 
 class Station(Base):
@@ -182,12 +181,12 @@ class PopulatedSystem(Base):
     needs_permit = Column(Boolean)
     updated_at = Column(Integer)
     simbad_ref = Column(Text)
-    controlling_minor_faction_id = Column(Integer)
+    controlling_minor_faction_id = Column(Integer, ForeignKey('factions.id'))
     controlling_minor_faction = Column(Text)
     reserve_type_id = Column(Integer)
     reserve_type = Column(Text)
     minor_faction_presences = Column(JSONB)
-
+    factions = relationship("Faction")
 
 class System(Base):
     __tablename__ = 'systems'
